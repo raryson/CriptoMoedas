@@ -6,23 +6,19 @@ const router = express.Router()
 const mongoUserName = process.env.mongoUserName
 const mongoUserPassword = process.env.mongoUserPassword
 
-const UserModel = new mongoose.Schema({ name: String, guid: String, criptoMoedas: Number})
-const User = mongoose.model('User', UserModel)
+mongoose.connect(`mongodb://${mongoUserName}:${mongoUserPassword}@ds221242.mlab.com:21242/criptomoedas`)
+    
+const User = mongoose.model('User', { name: String, guid: String, criptoMoedas: Number})
 
 router.get('/:guid', (req, res) => {
-    console.log("AAA")
-    User.findOne({ 'name': 'Raryson'}, (err, user) => { 
-        console.log("bbb")
+    User.findOne({"guid": req.params.guid},(err, user) => { 
             res.json(user);
         })
     })
 
 router.post('/', (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
-    mongoose.connect(`mongodb://${mongoUserName}:${mongoUserPassword}@ds221242.mlab.com:21242/criptomoedas`)
-    
     const creatingUser = new User({ name: req.body.name, guid: uuidv1(), criptoMoedas: req.body.criptoMoedas })
-    
     creatingUser.save().then(() => res.json(creatingUser))
 })
 
