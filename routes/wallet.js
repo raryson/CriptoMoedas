@@ -6,17 +6,16 @@ const router = express.Router()
 const mongoUserName = process.env.mongoUserName
 const mongoUserPassword = process.env.mongoUserPassword
 
-const User = mongoose.model('User', { name: String, guid: String, criptoMoedas: Number})
+const UserModel = new mongoose.Schema({ name: String, guid: String, criptoMoedas: Number})
+const User = mongoose.model('User', UserModel)
 
 router.get('/:guid', (req, res) => {
-    User.findOne({ guid: req.params.guid},(
-        (err, user) => {
-
-            // if(err) throw err;
-    
+    console.log("AAA")
+    User.findOne({ 'name': 'Raryson'}, (err, user) => { 
+        console.log("bbb")
             res.json(user);
-        }))
-})
+        })
+    })
 
 router.post('/', (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
