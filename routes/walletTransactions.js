@@ -1,35 +1,34 @@
 const express = require('express')
-const uuidv1 = require('uuid/v1')
+const asyncHandler = require('express-async-handler')
 const MongoUser = require('../routes/user')
 
 const router = express.Router()
 
-router.post('/', (req, res) => {
+router.post('/', asyncHandler(async (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
-    MongoUser.User.findOne({"guid": req.body.fromGuid}, (err, user) => {
-        if(err) throw err
-        let fromUserObject = new MongoUser.User(user)
+    let fromGuidUser =  await GetUserByGuid(req.body.fromGuid)
+    let toGuidUser =   await GetUserByGuid(req.body.toGuid)
 
-        MongoUser.User.findOne({"guid": req.body.toGuid}, (err, user) => {
-            if(err) throw err
-            let toUserObject = new MongoUser.User(user)
+    fromGuidUser.criptoMoedas -= parseInt(req.body.quantity)
+    let infoFromUpdate = {criptoMoedas: fromGuidUser.criptoMoedas}
 
-            fromUserObject.criptoMoedas -= req.body.quantity
-            toUserObject.criptoMoedas += req.body.quantity
+    toGuidUser.criptoMoedas += parseInt(req.body.quantity)
+    let infoToUpdate = {criptoMoedas: toGuidUser.criptoMoedas}
 
-            MongoUser.User.findOneAndUpdate({"guid": fromUserObject.guid},{fromUserObject},(err) => {
-                if(err) throw err
-            })
-
-            MongoUser.User.findOneAndUpdate({"guid": toUserObject.guid},{toUserObject},(err) => {
-                if(err) throw err
-            })
-        })
-    })
+    await UpdateUserByGuid(fromGuidUser.guid, infoFromUpdate)
+    await UpdateUserByGuid(toGuidUser.guid, infoToUpdate)
 
     res.json("ok")
 
-})
+}))
+
+const GetUserByGuid = (guid) => {
+     return MongoUser.User.findOne({"guid":guid}).exec().catch((err) => {throw err})
+}
+
+const UpdateUserByGuid = (guid, userInfos) => {
+    return MongoUser.User.findOneAndUpdate({"guid":guid}, userInfos)
+}
 
 
 
