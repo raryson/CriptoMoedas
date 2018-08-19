@@ -24,4 +24,6 @@ You can use this Postman repository to base your consults:
 
 https://www.getpostman.com/collections/bc01bd092abdb2f788e5
 
+You can test API in http://criptocoins-tk.umbler.net/
+
 ### Enjoy  :kissing_heart:
