@@ -1,7 +1,7 @@
 const express = require('express')
-const userMongoose = require('../routes/user')
+const userMongoose = require('../models/user')
 const asyncHandler = require('express-async-handler')
-const bitcoins = require('./bitcoins')
+const bitcoins = require('../models/bitcoins')
 
 const router = express.Router()
 
