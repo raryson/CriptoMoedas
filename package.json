@@ -14,13 +14,9 @@
     "mongoose": "^5.2.8",
     "mongoose-mock": "^0.4.0",
     "node-fetch": "^2.2.0",
-    "proxyquire": "^2.0.1",
     "request": "^2.88.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.1",
     "uuid": "^3.3.2"
-  },
-  "devDependencies": {
-    "tape-promise": "^3.0.0"
   }
 }
