@@ -1,37 +1,22 @@
 const express = require('express')
 const asyncHandler = require('express-async-handler')
-const MongoUser = require('../routes/user')
+const user = require('./user')
 
 const router = express.Router()
 
 router.post('/', asyncHandler(async (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
-    const fromGuidUser =  await GetUserByGuid(req.body.fromGuid)
-    const toGuidUser =   await GetUserByGuid(req.body.toGuid)
+    const fromGuidUser =  await user.GetUserByGuid(req.body.fromGuid)
+    const toGuidUser =   await user.GetUserByGuid(req.body.toGuid)
 
-    fromGuidUser.criptoCoins -= parseInt(req.body.quantity)
-    fromGuidUser.transactions.push(`Made a transfer to ${toGuidUser.guid} with value of ${req.body.quantity} criptoCoins, ${new Date().toLocaleString()}`)
-    const infoFromUpdate = {criptoCoins: fromGuidUser.criptoCoins, transactions: fromGuidUser.transactions}
+    const infoFromUpdate = user.DiscountCryptocoinsFromUser(req.body.quantity, fromGuidUser)
+    const infoToUpdate = user.AddCryptoCoinsToUser(req.body.quantity, toGuidUser)
 
-    toGuidUser.criptoCoins += parseInt(req.body.quantity)
-    toGuidUser.transactions.push(`Receive a transfer from ${fromGuidUser.guid} with value of ${req.body.quantity} criptoCoins, ${new Date().toLocaleString()}`)
-    const infoToUpdate = {criptoCoins: toGuidUser.criptoCoins, transactions: toGuidUser.transactions}
-
-    await UpdateUserByGuid(fromGuidUser.guid, infoFromUpdate)
-    await UpdateUserByGuid(toGuidUser.guid, infoToUpdate)
+    await user.UpdateUserByGuid(fromGuidUser.guid, infoFromUpdate)
+    await user.UpdateUserByGuid(toGuidUser.guid, infoToUpdate)
 
     res.json("ok")
 
 }))
-
-const GetUserByGuid = (guid) => {
-     return MongoUser.User.findOne({"guid":guid}).exec().catch((err) => {throw err})
-}
-
-const UpdateUserByGuid = (guid, userInfos) => {
-    return MongoUser.User.findOneAndUpdate({"guid":guid}, userInfos)
-}
-
-
 
 module.exports = router;

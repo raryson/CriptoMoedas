@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "test": "node index.test | tap-spec",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -11,6 +12,10 @@
     "express": "~4.13.1",
     "express-async-handler": "^1.1.4",
     "mongoose": "^5.2.8",
+    "node-fetch": "^2.2.0",
+    "request": "^2.88.0",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.9.1",
     "uuid": "^3.3.2"
   }
 }
