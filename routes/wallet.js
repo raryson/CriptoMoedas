@@ -13,7 +13,8 @@ router.get('/:guid', (req, res) => {
 
 router.post('/', (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
-    const creatingUser = new MongoUser.User({ name: req.body.name, guid: uuidv1(), criptoMoedas: req.body.criptoMoedas })
+    const creatingUser = new MongoUser.User({ name: req.body.name, guid: uuidv1(), criptoCoins: req.body.criptoCoins, 
+    transactions: [`Wallet is created, ${new Date().toLocaleString()}`]})
     creatingUser.save().then(() => res.json(creatingUser))
 })
 

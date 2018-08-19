@@ -6,14 +6,16 @@ const router = express.Router()
 
 router.post('/', asyncHandler(async (req, res) => {
     //VOU FINGIR QUE TEM VALIDACAO DOS DADOS QUE ENTRAM, BLZ?
-    let fromGuidUser =  await GetUserByGuid(req.body.fromGuid)
-    let toGuidUser =   await GetUserByGuid(req.body.toGuid)
+    const fromGuidUser =  await GetUserByGuid(req.body.fromGuid)
+    const toGuidUser =   await GetUserByGuid(req.body.toGuid)
 
-    fromGuidUser.criptoMoedas -= parseInt(req.body.quantity)
-    let infoFromUpdate = {criptoMoedas: fromGuidUser.criptoMoedas}
+    fromGuidUser.criptoCoins -= parseInt(req.body.quantity)
+    fromGuidUser.transactions.push(`Made a transfer to ${toGuidUser.guid} with value of ${req.body.quantity} criptoCoins, ${new Date().toLocaleString()}`)
+    const infoFromUpdate = {criptoCoins: fromGuidUser.criptoCoins, transactions: fromGuidUser.transactions}
 
-    toGuidUser.criptoMoedas += parseInt(req.body.quantity)
-    let infoToUpdate = {criptoMoedas: toGuidUser.criptoMoedas}
+    toGuidUser.criptoCoins += parseInt(req.body.quantity)
+    toGuidUser.transactions.push(`Receive a transfer from ${fromGuidUser.guid} with value of ${req.body.quantity} criptoCoins, ${new Date().toLocaleString()}`)
+    const infoToUpdate = {criptoCoins: toGuidUser.criptoCoins, transactions: toGuidUser.transactions}
 
     await UpdateUserByGuid(fromGuidUser.guid, infoFromUpdate)
     await UpdateUserByGuid(toGuidUser.guid, infoToUpdate)
