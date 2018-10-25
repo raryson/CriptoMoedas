@@ -27,3 +27,4 @@ https://www.getpostman.com/collections/bc01bd092abdb2f788e5
 You can test API in http://criptocoins.tk
 
 ### Enjoy  :kissing_heart:
+maybe I don't wanna enjoy U_U
